@@ -95,6 +95,7 @@ class priority
 public:
     bool operator()(const node &s1, const node &s2)
     {
-        return s1.g_val + s1.h_val > s2.g_val + s2.h_val;
+        double weight = 1;
+        return s1.g_val + weight*s1.h_val > s2.g_val + weight*s2.h_val;
     }
 };
