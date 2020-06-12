@@ -10,7 +10,8 @@ struct node
     const row *station_data;
     double curr_charge;
     double charge_time;
-    double g_val;
+    double g_val; // cost from start
+    double h_val; //heuristic value
     node *parent;
 
     node()
@@ -42,17 +43,19 @@ struct node
 
     inline bool operator==(const node &rhs) const
     {
+        double dist_epsilon = 1e-5; //decide upon a correct resolution
+        double t_epsilon = 1e-5; //decide upon a correct resolution
 
         if (this->station_data->name != rhs.station_data->name)
         {
             return false;
         }
 
-        if (this->curr_charge != rhs.curr_charge)
+        if (abs(this->curr_charge - rhs.curr_charge) > dist_epsilon )
         {
             return false;
         }
-        if (this->charge_time != rhs.charge_time)
+        if (abs(this->charge_time - rhs.charge_time) >t_epsilon)
         {
             return false;
         }
@@ -71,7 +74,7 @@ struct node
     }
 };
 
-struct stateHasher
+struct NodeHasher
 {
     size_t operator()(const node &thestate) const
     {
@@ -79,10 +82,19 @@ struct stateHasher
     }
 };
 // util function for unordred set of nodes
-struct stateComparator
+struct NodeComparator
 {
     bool operator()(const node &lhs, const node &rhs) const
     {
         return lhs == rhs;
+    }
+};
+
+class priority
+{
+public:
+    bool operator()(const node &s1, const node &s2)
+    {
+        return s1.g_val + s1.h_val > s2.g_val + s2.h_val;
     }
 };

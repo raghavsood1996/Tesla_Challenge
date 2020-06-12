@@ -38,6 +38,6 @@ int main(int argc, char** argv)
 
     // std::cout<<get_distance(init_charger,goal_charger)<<"\n";
     Search src_obj(start,goal);
-
+    src_obj.Solve();
     return 0;
 }

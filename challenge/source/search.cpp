@@ -66,11 +66,82 @@ double Search::get_cost(node &curr_node, node &succ){
     return cost;
 }
 
+double Search::get_goal_heuristic(node &nd){
 
-//WHerever comparisons are made make sure they are not exact for double datatypea
+    return get_distance(nd.station_data,goal.station_data);
+
+}
+
+//Wherever comparisons are made make sure they are not exact for double datatype
 
 std::vector<node> Search::Solve(){
+
+    std::priority_queue<node,std::vector<node>,priority> open_list;
+    std::unordered_set<node,NodeHasher,NodeComparator> closed_list;
+
+    start.g_val = 0;
+    dist_map[start] = 0;
+    open_list.push(start);
+
+    node parent_node;
+    int itr = 0;
+    while(!open_list.empty()){
+        itr++;
+
+        parent_node =open_list.top();
+        open_list.pop();
+        if(parent_node == goal){
+            break;
+        }
+
+        //check if already in closed list
+        if(closed_list.find(parent_node) != closed_list.end()){
+            itr--;
+            continue;
+        }
+
+        closed_list.insert(parent_node);
+
+        auto succs = GetSuccs(&parent_node);
+
+        for(auto succ: succs){
+
+            double temp_g = dist_map[parent_node] + get_cost(parent_node,succ);
+            if(dist_map.find(succ) == dist_map.end()){
+                dist_map[succ] = temp_g;
+                succ.parent = &parent_node;
+                succ.g_val = temp_g;
+                succ.h_val = get_goal_heuristic(succ);
+                open_list.push(succ);
+              
+            }
+
+            else if(temp_g < dist_map[succ] + 0.0001){
+                dist_map[succ] = temp_g;
+                succ.parent = &parent_node;
+                succ.g_val = temp_g;
+                succ.h_val = get_goal_heuristic(succ);
+                open_list.push(succ);
+               
+
+            }
+
+        }
+    }
+
     std::vector<node> solution;
+
+    node* start = &parent_node;
+
+    node* temp = start;
+
+    while(start != NULL){
+        temp = temp->parent;
+        std::cout<<temp->station_data->name<<"\n";
+        solution.push_back(*temp);
+    }
+
+
 
     return solution;
 }
