@@ -66,9 +66,11 @@ struct node
     inline std::string toString() const{
         std::string temp = "";
 
-		temp += this->station_data->name + ",";
-		temp += std::to_string(this->curr_charge);
-        temp += std::to_string(this->charge_time);
+		temp += std::to_string(int(10*this->station_data->lat));
+        int ch = 10*this->curr_charge;
+        int ct = 10*this->charge_time;
+		temp += std::to_string(ch);
+        temp += std::to_string(ct);
 
 		return temp;
     }
@@ -95,7 +97,7 @@ class priority
 public:
     bool operator()(const node &s1, const node &s2)
     {
-        double weight = 1;
+        double weight = 2;
         return s1.g_val + weight*s1.h_val > s2.g_val + weight*s2.h_val;
     }
 };

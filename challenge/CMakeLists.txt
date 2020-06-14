@@ -6,25 +6,24 @@ endif()
 
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -msse3 -Ofast")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Ofast")
 
 
 
 project(SuperCharger)
 include_directories(include)
-find_package (Eigen3 REQUIRED NO_MODULE)
+
 
 link_directories(/usr/local/lib)
 
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+find_package(Gperftools)
 
-include_directories(${Boost_INCLUDE_DIRS})
-
-# include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR} ${GPERFTOOLS_INCLUDE_DIR} )
-add_executable (super_charger source/main.cpp source/network.cpp source/search.cpp source/node.cpp)
-# target_link_libraries(super_charger ${GPERFTOOLS_LIBRARIES}  ${OpenCV_LIBS})
+include_directories(SYSTEM ${GPERFTOOLS_INCLUDE_DIR} )
+add_executable (super_charger source/main.cpp source/network.cpp source/search.cpp )
+target_link_libraries(super_charger ${GPERFTOOLS_LIBRARIES})
 
 
 set_property(TARGET super_charger PROPERTY CXX_STANDARD 20)

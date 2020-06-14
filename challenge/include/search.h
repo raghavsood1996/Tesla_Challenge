@@ -22,15 +22,18 @@ private:
     std::array<row, 303> *network;
     double max_range = 320;
     double speed = 105;
-    double min_time_step = 0.01;
+    double min_time_step = 0.25;
     std::unordered_map<node,double,NodeHasher> dist_map;
     std::unordered_map<node,node,NodeHasher> parent_map;
+    std::unordered_map<node,std::vector<double>node,NodeHasher> ngb_map; 
+    std::unordered_set<node,NodeHasher,NodeComparator> closed_list;
+
     node start;
     node goal;
 
-    std::vector<node> GetSuccs(node *curr_node);
-    std::vector<node> Get_reachable_nodes(node* curr_node);
-    std::vector<node> Get_charging_nodes(std::vector<node> &rch_nodes);
+    void GetSuccs(node *curr_node,std::vector<node>& Succs);
+    void Get_reachable_nodes(node* curr_node,std::vector<node> &rch_nodes);
+    void Get_charging_nodes(std::vector<node> &rch_nodes,std::vector<node> &Succs);
     void Get_charging_node(node &rch_node, std::vector<node> &ch_nodes);
     double get_cost(node &curr_node, node &succ);
     double get_goal_heuristic(node &nd);
