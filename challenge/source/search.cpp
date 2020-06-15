@@ -5,25 +5,39 @@ Search::Search(node start, node goal, std::array<row, 303> *network)
     this->start = start;
     this->goal = goal;
     this->network = network;
+    
+}
+
+//set time resolution for search
+void Search::set_time_resolution(double res){
+    this->min_time_step = res;
 }
 
 //get all charging station within reach
-void Search::Get_reachable_nodes(node *curr_node , std::vector<node> &rch_nodes)
+std::vector<node>* Search::Get_reachable_nodes(node *curr_node)
 {
     
     double curr_range = curr_node->curr_charge;
     
+    if(ngb_map.find(*curr_node) !=  ngb_map.end()){
+
+        return &ngb_map[*curr_node];
+    }
+
+    // std::vector<node> rch_nodes;
     for (size_t i = 0; i < network->size(); i++)
     {
         auto dist = get_distance(curr_node->station_data, &(*network)[i]);
         if (dist < curr_range && dist > 0.1)
         {
             node tmp(&(*network)[i], curr_range - dist, 0);
-            rch_nodes.push_back(tmp);
+            ngb_map[*curr_node].push_back(tmp);
         }
     }
 
-    
+    // ngb_map[*curr_node] = rch_nodes;
+
+    return &ngb_map[*curr_node];
 }
 
 //get all possible charging times for a current state at a current charger
@@ -32,7 +46,7 @@ void Search::Get_charging_node(node &nd, std::vector<node> &ch_nodes)
     double diff_charge = max_range - nd.curr_charge;
     double max_charge_time = diff_charge / nd.station_data->rate;
 
-    double charge_time = 0; //decide later where to start
+    double charge_time = 0.01; //decide later where to start
     double updated_charge;
     while (charge_time < max_charge_time)
     {
@@ -59,9 +73,9 @@ void Search::Get_charging_nodes(std::vector<node> &rch_nodes, std::vector<node> 
 //generates succesors for creating the search graph
 void Search::GetSuccs(node *curr_node, std::vector<node> &Succs)
 {
-    std::vector<node> rch_nodes;
-    Get_reachable_nodes(curr_node,rch_nodes);
-    Get_charging_nodes(rch_nodes, Succs);
+   
+    auto rch_nodes = Get_reachable_nodes(curr_node);
+    Get_charging_nodes(*rch_nodes, Succs);
 }
 
 //returns cost between two graph edges
@@ -93,7 +107,7 @@ bool Search::is_goal(node &nd)
 std::vector<node> Search::Solve()
 {
 
-    std::priority_queue<node, std::vector<node>, priority> open_list;
+    std::priority_queue<node, std::vector<node>> open_list;
     clock_t start_time;
     start_time = clock();
     start.g_val = 0;
@@ -123,9 +137,6 @@ std::vector<node> Search::Solve()
             continue;
         }
 
-        // std::cout<<itr<<"\n";
-        // std::cout<<"Expanding\n"<<parent_node.station_data->name<<" "<<
-        // parent_node.curr_charge<<" "<<parent_node.charge_time<<"\n";
         closed_list.insert(parent_node);
 
         std::vector<node> succs;
@@ -160,10 +171,11 @@ std::vector<node> Search::Solve()
         std::cout << "Error: No Solution to the query Exists"
                   << "\n";
     }
+
     std::vector<node> solution;
     float time_passed = (float(clock() - start_time)) / CLOCKS_PER_SEC;
 
-    std::cout<<"Time passed "<<time_passed<<" secs"<<"\n";
+    // std::cout<<"Time passed "<<time_passed<<" secs"<<"\n";
     node st = parent_node;
 
     std::vector<std::string> res;

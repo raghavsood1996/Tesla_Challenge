@@ -18,12 +18,8 @@ include_directories(include)
 link_directories(/usr/local/lib)
 
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
-find_package(Gperftools)
-
-include_directories(SYSTEM ${GPERFTOOLS_INCLUDE_DIR} )
 add_executable (super_charger source/main.cpp source/network.cpp source/search.cpp )
-target_link_libraries(super_charger ${GPERFTOOLS_LIBRARIES})
+
 
 
 set_property(TARGET super_charger PROPERTY CXX_STANDARD 20)

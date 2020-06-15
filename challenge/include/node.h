@@ -5,6 +5,7 @@
 #include <network.h>
 #include <string>
 
+//node class used for search
 struct node
 {
     const row *station_data;
@@ -12,13 +13,13 @@ struct node
     double charge_time;
     double g_val; // cost from start
     double h_val; //heuristic value
-    node *parent;
+    
+    static const double compare_weight;
 
     node()
     {
         station_data = NULL;
         g_val = __DBL_MAX__;
-        parent = NULL;
         curr_charge = -1;
         charge_time = -1;
     }
@@ -29,7 +30,7 @@ struct node
         this->curr_charge = curr_charge;
         this->charge_time = charge_time;
         g_val = __DBL_MAX__;
-        parent = NULL;
+        
     }
 
     node(const row *station_data)
@@ -38,8 +39,9 @@ struct node
         this->curr_charge = -1;
         this->charge_time = -1;
         g_val = __DBL_MAX__;
-        parent = NULL;
+        
     }
+
 
     inline bool operator==(const node &rhs) const
     {
@@ -63,16 +65,32 @@ struct node
         return true;
     }
 
-    inline std::string toString() const{
-        std::string temp = "";
 
-		temp += std::to_string(int(10*this->station_data->lat));
-        int ch = 10*this->curr_charge;
-        int ct = 10*this->charge_time;
-		temp += std::to_string(ch);
-        temp += std::to_string(ct);
+    inline int to_int() const{
+        int temp = 0 ;
+        temp += int(this->station_data->lat);
+        temp -= int(this->station_data->lon);
+        temp -= 10*this->curr_charge;
+        temp += 10*this->charge_time;
 
-		return temp;
+        return temp;
+
+    }
+
+    inline int to_int2() const{
+        int temp = 0 ;
+        temp += int(this->station_data->lat);
+        temp -= int(this->station_data->lon);
+        temp -= 10*this->curr_charge;
+        
+        return temp;
+
+    }
+
+    friend bool operator<(const node s1, const node &s2){
+
+       
+        return s1.g_val + node::compare_weight*s1.h_val > s2.g_val + node::compare_weight*s2.h_val;
     }
 };
 
@@ -80,7 +98,15 @@ struct NodeHasher
 {
     size_t operator()(const node &thestate) const
     {
-        return std::hash<std::string>{}(thestate.toString());
+        return std::hash<int>{}(thestate.to_int());
+    }
+};
+
+struct NodeHasher2
+{
+    size_t operator()(const node &thestate) const
+    {
+        return std::hash<int>{}(thestate.to_int2());
     }
 };
 // util function for unordred set of nodes
@@ -92,12 +118,3 @@ struct NodeComparator
     }
 };
 
-class priority
-{
-public:
-    bool operator()(const node &s1, const node &s2)
-    {
-        double weight = 2;
-        return s1.g_val + weight*s1.h_val > s2.g_val + weight*s2.h_val;
-    }
-};
