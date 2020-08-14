@@ -14,7 +14,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Ofast")
 project(SuperCharger)
 include_directories(include)
 
-
 link_directories(/usr/local/lib)
 
 

@@ -5,8 +5,8 @@
 #include <network.h>
 #include <string>
 
-//node class used for search
-struct node
+//Node class used for search
+struct Node
 {
     const row *station_data;
     double curr_charge;
@@ -16,7 +16,7 @@ struct node
     
     static const double compare_weight;
 
-    node()
+    Node()
     {
         station_data = NULL;
         g_val = __DBL_MAX__;
@@ -24,7 +24,7 @@ struct node
         charge_time = -1;
     }
 
-    node(const row *station_data, double curr_charge, double charge_time)
+    Node(const row *station_data, double curr_charge, double charge_time)
     {
         this->station_data = station_data;
         this->curr_charge = curr_charge;
@@ -33,7 +33,7 @@ struct node
         
     }
 
-    node(const row *station_data)
+    Node(const row *station_data)
     {
         this->station_data = station_data;
         this->curr_charge = -1;
@@ -43,7 +43,7 @@ struct node
     }
 
 
-    inline bool operator==(const node &rhs) const
+    inline bool operator==(const Node &rhs) const
     {
         double dist_epsilon = 1e-5; //decide upon a correct resolution
         double t_epsilon = 1e-5; //decide upon a correct resolution
@@ -87,16 +87,16 @@ struct node
 
     }
 
-    friend bool operator<(const node s1, const node &s2){
+    friend bool operator<(const Node s1, const Node &s2){
 
        
-        return s1.g_val + node::compare_weight*s1.h_val > s2.g_val + node::compare_weight*s2.h_val;
+        return s1.g_val + Node::compare_weight*s1.h_val > s2.g_val + Node::compare_weight*s2.h_val;
     }
 };
 
 struct NodeHasher
 {
-    size_t operator()(const node &thestate) const
+    size_t operator()(const Node &thestate) const
     {
         return std::hash<int>{}(thestate.to_int());
     }
@@ -104,15 +104,15 @@ struct NodeHasher
 
 struct NodeHasher2
 {
-    size_t operator()(const node &thestate) const
+    size_t operator()(const Node &thestate) const
     {
         return std::hash<int>{}(thestate.to_int2());
     }
 };
-// util function for unordred set of nodes
+// util function for unordred set of Nodes
 struct NodeComparator
 {
-    bool operator()(const node &lhs, const node &rhs) const
+    bool operator()(const Node &lhs, const Node &rhs) const
     {
         return lhs == rhs;
     }

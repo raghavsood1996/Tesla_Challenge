@@ -16,8 +16,8 @@ class Search
 {
 
 public:
-    Search(node start, node goal, std::array<row, 303> *network);
-    std::vector<node> Solve();
+    Search(Node start, Node goal, std::array<row, 303> *network);
+    std::vector<Node> Solve();
     void set_time_resolution(double res);
     
 private:
@@ -26,21 +26,21 @@ private:
     double max_range = 319.9;
     double speed = 105;
     double min_time_step = 0.25;
-    std::unordered_map<node,double,NodeHasher> dist_map;
-    std::unordered_map<node,node,NodeHasher> parent_map;
-    std::unordered_map<node,std::vector<node>,NodeHasher2> ngb_map; 
-    std::unordered_set<node,NodeHasher,NodeComparator> closed_list;
+    std::unordered_map<Node,double,NodeHasher> dist_map;
+    std::unordered_map<Node,Node,NodeHasher> parent_map;
+    std::unordered_map<Node,std::vector<Node>,NodeHasher2> ngb_map; 
+    std::unordered_set<Node,NodeHasher,NodeComparator> closed_list;
 
-    node start;
-    node goal;
+    Node start;
+    Node goal;
 
-    void GetSuccs(node *curr_node,std::vector<node>& Succs);
-    std::vector<node>* Get_reachable_nodes(node* curr_node);
-    void Get_charging_nodes(std::vector<node> &rch_nodes,std::vector<node> &Succs);
-    void Get_charging_node(node &rch_node, std::vector<node> &ch_nodes);
-    double get_cost(node &curr_node, node &succ);
-    double get_goal_heuristic(node &nd);
-    bool is_goal(node &nd);
+    void getSuccs(Node *curr_Node,std::vector<Node>& Succs);
+    std::vector<Node>* getReachableNodes(Node* curr_Node);
+    void getChargingNodes(std::vector<Node> &rch_Nodes,std::vector<Node> &Succs);
+    void getChargingNode(Node &rch_Node, std::vector<Node> &ch_Nodes);
+    double getCost(Node &curr_Node, Node &succ);
+    double getGoalHeuristic(Node &nd);
+    bool isGoal(Node &nd);
     
 
 

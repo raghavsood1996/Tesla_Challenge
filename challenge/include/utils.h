@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #include<network.h>
 #include<iostream>
@@ -9,7 +8,7 @@
 
 
 //return reference to the station by reading station name
-inline const row* get_station(std::string charger_name){
+inline const row* getStation(std::string charger_name){
     int num_stations = network.size();
     for(int i=0 ; i<num_stations;i++){
         if(network[i].name == charger_name ){
@@ -28,7 +27,7 @@ inline long double toRadians(const long double degree)
 }
 
 //get distance on the globe between two stations
-inline double get_distance(const row *station_1, const row *station_2){
+inline double getDistance(const row *station_1, const row *station_2){
     
     double lat1 = toRadians(station_1->lat); 
     double long1 = toRadians(station_1->lon); 
