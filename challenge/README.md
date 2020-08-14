@@ -1,3 +1,4 @@
+## **Problem Statement**
 Your objective is to construct a search algorithm to find the minimum time path through the tesla
 network of supercharging stations. Each supercharger will refuel the vehicle at a different rate
 given in km/hr of charge time. Your route does not have to fully charge at every visited charger,
