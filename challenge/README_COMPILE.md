@@ -1,9 +1,9 @@
-BUILDING
+## BUILDING
 - This is a CMake Project
 - In the current directory run build.sh
 - The Binary named "super_charger" will be generated in the build folder 
 
-RUNNING
+## RUNNING
 - The algorithm can be adjusted either to return optimal (slow) solution or slightly suboptimal(fast) solution.
 - To control this the variable called "compare_weight" can be changed in main.cpp
 - If the value of the "compare_weight" is set to 1 then it will generate an optimal result with guarantee.
